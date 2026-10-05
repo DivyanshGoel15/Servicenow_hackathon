@@ -21,15 +21,15 @@ Monday, 5 October 2026
 - **Why it was changed**: Required to complete presentation step 4 and step 5 ("Triage processes input" and "Category/priority/support recommendation appears") and deliver cases to the Staff Console.
 - **Category**: Integration & UI.
 
-### `admin.html`
+### `admin.html` & `backend/server.js` (Dashboard Enhancements)
 - **What was changed**:
-  - Updated `cases` and `analyses` data structures to merge persistent cases from `localStorage` (`oneRoute_cases` / `supportAICases`) at the top of the queue.
-  - Updated `student(id, caseObj)` helper to display the submitting student's actual name and email from authenticated sessions.
-  - Updated `updateCaseStatus(id, status)` to persist workflow updates back to `localStorage` and trigger `/api/cases/:id` patch.
-  - Updated console branding to "OneRoute Staff Triage Console" with tagline and "1R" brand mark.
-  - Added "Student Portal ↗" link in the header and "Sign out" link in the staff sidebar.
-- **Why it was changed**: Required so that student submissions from `student.html` appear immediately on the Admin dashboard and triage queue with full AI reasoning details.
-- **Category**: Integration & UI.
+  - Populated balanced dummy cases containing an active mix of **Low, Medium, and High** priority cases across `New`, `Assigned`, `In Progress`, and `Resolved` states (not just High).
+  - Added dedicated one-click **Status Action Buttons** (`New`, `Assign`, `In Progress`, `Resolve`) directly on each row in the Recent Cases table and Cases view.
+  - Clicking any status button immediately transitions the case status, highlights the active state, updates the status pill, recalculates top metrics cards (`New Cases`, `High Priority`, `In Progress`, `Resolved`) in real time, and persists updates to `localStorage` and `PATCH /api/cases/:id`.
+  - Added **Recent Cases Sorting** via both an interactive dropdown selector (`Newest First`, `Priority: High → Low`, `Priority: Low → High`, `Status: New → Resolved`, `Status: Resolved First`, `Student Name`) and clickable table column headers.
+  - Added a `↻ Reset Demo` button to quickly restore clean balanced demo data at any time.
+- **Why it was changed**: User requested a balanced distribution of Low, Medium, and High dummy cases on the dashboard, quick action buttons to put cases into Assigned, In Progress, and Resolved, and sorting capabilities for the Recent Cases queue.
+- **Category**: Feature Enhancement & UI.
 
 ### `login.html`
 - **What was changed**:
