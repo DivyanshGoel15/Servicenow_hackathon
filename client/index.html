@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneRoute — Student Triage & Routing</title>
+  <script>
+    (function() {
+      // Smart router: If user is logged in as student, go to student.html; if admin, go to admin.html
+      try {
+        var user = localStorage.getItem('supportAIUser');
+        if (user) {
+          var parsed = JSON.parse(user);
+          if (parsed && parsed.role === 'admin') {
+            window.location.replace('admin.html');
+            return;
+          }
+          window.location.replace('student.html');
+          return;
+        }
+      } catch (e) {}
+      window.location.replace('login.html');
+    })();
+  </script>
+</head>
+<body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; color: #5a6a7a;">
+  <p>Loading... <a href="student.html">Student Portal</a> &middot; <a href="login.html">Login</a> &middot; <a href="signup.html">Sign Up</a></p>
+</body>
+</html>

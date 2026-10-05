@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OneRoute — Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            min-height: 100vh;
+        }
+
+        /* ================= LOGIN PAGE ================= */
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .login-box {
+            width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .login-box p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .role-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #5568d9;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .demo-info {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ================= DASHBOARD ================= */
+
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar h2 {
+            color: #667eea;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 7px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #777;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card p {
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .student-dashboard .card {
+            border-top: 4px solid #667eea;
+        }
+
+        .admin-dashboard .card {
+            border-top: 4px solid #28a745;
+        }
+
+        .admin-dashboard .navbar h2 {
+            color: #28a745;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 768px) {
+
+            .login-box {
+                width: 90%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= LOGIN PAGE ================= -->
+
+    <div class="login-page" id="loginPage">
+
+        <div class="login-box">
+
+            <h1>OneRoute</h1>
+
+            <p>One place to start. The right support.</p>
+
+            <!-- ROLE SELECTION -->
+
+            <div class="role-buttons">
+
+                <button
+                    class="role-btn active"
+                    id="studentBtn"
+                    onclick="selectRole('student')">
+                    Student
+                </button>
+
+                <button
+                    class="role-btn"
+                    id="adminBtn"
+                    onclick="selectRole('admin')">
+                    Admin
+                </button>
+
+            </div>
+
+            <!-- LOGIN FORM -->
+
+            <form onsubmit="login(event)">
+
+                <div class="input-group">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        required>
+
+                </div>
+
+                <button class="login-btn" type="submit">
+                    Login
+                </button>
+
+                <div class="error" id="errorMessage"></div>
+
+                <div style="text-align: center; margin-top: 18px; font-size: 14px; color: #555;">
+                    Don't have an account?
+                    <a href="signup.html" style="color: #667eea; font-weight: bold; text-decoration: none; margin-left: 4px;">Sign Up</a>
+                </div>
+
+            </form>
+
+            <div class="demo-info">
+                <b>Demo Accounts:</b><br><br>
+
+                Student:
+                <b>alex@student</b> (Password: 1234)<br>
+
+                Admin:
+                <b>officer@admin</b> (Password: 1234)
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= STUDENT DASHBOARD ================= -->
+
+    <div class="dashboard student-dashboard" id="studentDashboard">
+
+        <div class="navbar">
+
+            <h2>Student Portal</h2>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+        <div class="dashboard-content">
+
+            <div class="welcome">
+
+                <h1>Welcome, Student 👋</h1>
+
+                <p>
+                    Raise and track your campus complaints easily.
+                </p>
+
+            </div>
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>📝 Raise Complaint</h3>
+
+                    <p>
+                        Report problems such as AC issues,
+                        projector problems, Wi-Fi issues etc.
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>📋 My Complaints</h3>
+
+                    <p>
+                        View all the complaints raised by you
+                        and check their current status.
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>⭐ Feedback</h3>
+
+                    <p>
+                        Give feedback after your complaint
+                        has been successfully resolved.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ADMIN DASHBOARD ================= -->
+
+    <div class="dashboard admin-dashboard" id="adminDashboard">
+
+        <div class="navbar">
+
+            <h2>Admin Portal</h2>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+        <div class="dashboard-content">
+
+            <div class="welcome">
+
+                <h1>Welcome, Admin 👋</h1>
+
+                <p>
+                    Manage and resolve campus complaints.
+                </p>
+
+            </div>
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>📥 New Complaints</h3>
+
+                    <p>
+                        View newly submitted complaints
+                        from students.
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>🔧 Assigned Issues</h3>
+
+                    <p>
+                        Check complaints assigned to your
+                        department and update their status.
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>📊 Complaint Statistics</h3>
+
+                    <p>
+                        Monitor resolved, pending and
+                        active complaints.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        let selectedRole = "student";
+
+
+        // Select Student / Admin
+        function selectRole(role) {
+
+            selectedRole = role;
+
+            const studentBtn =
+                document.getElementById("studentBtn");
+
+            const adminBtn =
+                document.getElementById("adminBtn");
+
+
+            if (role === "student") {
+
+                studentBtn.classList.add("active");
+                adminBtn.classList.remove("active");
+
+            } else {
+
+                adminBtn.classList.add("active");
+                studentBtn.classList.remove("active");
+
+            }
+
+            document.getElementById("errorMessage").innerText = "";
+        }
+
+
+        // Login Function
+        function login(event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value.trim();
+
+            const errorMessage =
+                document.getElementById("errorMessage");
+
+
+            // Clear previous error
+            errorMessage.innerText = "";
+
+
+            // Basic password validation
+            if (password.length < 4) {
+
+                errorMessage.innerText =
+                    "Password must be at least 4 characters.";
+
+                return;
+            }
+
+
+            // Derive friendly display name
+            const rawPrefix = email.split('@')[0];
+            const displayName = rawPrefix.charAt(0).toUpperCase() + rawPrefix.slice(1);
+
+            // STUDENT LOGIN
+            if (selectedRole === "student") {
+
+                if (email.endsWith("@student")) {
+
+                    const userData = {
+                        name: displayName,
+                        userId: email,
+                        role: "student"
+                    };
+
+                    localStorage.setItem("supportAIUser", JSON.stringify(userData));
+
+                    // Seamless redirection to Student Portal
+                    window.location.href = "student.html";
+
+                } else {
+
+                    errorMessage.innerText =
+                        "Student email must end with @student (e.g. alex@student)";
+
+                }
+
+            }
+
+
+            // ADMIN LOGIN
+            else {
+
+                if (email.endsWith("@admin")) {
+
+                    const userData = {
+                        name: displayName,
+                        userId: email,
+                        role: "admin"
+                    };
+
+                    localStorage.setItem("supportAIUser", JSON.stringify(userData));
+
+                    // Seamless redirection to Admin Dashboard
+                    window.location.href = "admin.html";
+
+                } else {
+
+                    errorMessage.innerText =
+                        "Admin email must end with @admin (e.g. officer@admin)";
+
+                }
+
+            }
+
+        }
+
+
+        // Logout Function
+        function logout() {
+
+            document.getElementById("studentDashboard").style.display =
+                "none";
+
+            document.getElementById("adminDashboard").style.display =
+                "none";
+
+            document.getElementById("loginPage").style.display =
+                "flex";
+
+
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+
+            document.getElementById("errorMessage").innerText = "";
+
+            selectRole("student");
+        }
+
+    </script>
+
+</body>
+</html>

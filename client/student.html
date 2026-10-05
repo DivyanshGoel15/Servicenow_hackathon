@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OneRoute Student Support — describe your situation and we'll connect you to the right support service." />
+  <title>OneRoute — Student Support</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Triage Engine -->
+  <script src="triageService.js"></script>
+
+  <style>
+    /* ===========================
+       CSS VARIABLES / DESIGN TOKENS
+       =========================== */
+    :root {
+      --primary:      #0F2B46;      /* dark navy — headings, key text          */
+      --accent:       #2E8540;      /* ServiceNow-inspired green               */
+      --accent-light: #e8f5ec;      /* very light green tint                   */
+      --text:         #1a2b3d;      /* body text                               */
+      --muted:        #5a6a7a;      /* secondary / helper text                 */
+      --border:       #d4dae0;      /* subtle borders                          */
+      --background:   #ffffff;      /* page background                         */
+      --surface:      #f7f8fa;      /* card / section backgrounds              */
+      --radius:       8px;          /* standard border-radius                  */
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:    0 2px 8px rgba(0,0,0,.08);
+      --transition:   0.2s ease;
+    }
+
+    /* ===========================
+       RESET & BASE
+       =========================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--surface);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===========================
+       HEADER
+       =========================== */
+    .header {
+      background: var(--background);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .header-brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .header-brand-sub {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.25;
+    }
+
+    .header-portal-label {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .header-user-id {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+
+    .header-auth-link {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .header-auth-link:hover {
+      color: var(--primary);
+      border-color: #b0bac5;
+      background: #eef2f6;
+    }
+
+    /* ===========================
+       MAIN CONTENT
+       =========================== */
+    .main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* — Eyebrow — */
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* — Heading — */
+    .page-heading {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .page-subtext {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 36px;
+      line-height: 1.65;
+    }
+
+    /* ===========================
+       FORM CARD
+       =========================== */
+    .form-card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* — Textarea — */
+    .textarea-wrap {
+      position: relative;
+    }
+
+    #student-input {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      resize: vertical;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    #student-input::placeholder {
+      color: #8e99a8;
+    }
+
+    #student-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(46,133,64,.12);
+    }
+
+    /* — Character counter — */
+    .char-counter {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .char-counter.near-limit { color: #c0392b; }
+
+    /* — Privacy note — */
+    .privacy-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 16px;
+    }
+
+    /* — Submit button — */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 13px 32px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition), opacity var(--transition), transform 0.1s ease;
+      width: 100%;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #256e35;
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ===========================
+       QUICK START CHIPS
+       =========================== */
+    .quick-start {
+      margin-top: 28px;
+    }
+
+    .quick-start-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 7px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .chip:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===========================
+       CONFIRMATION STATE
+       =========================== */
+    .confirmation {
+      text-align: center;
+      padding: 20px 0 0;
+    }
+
+    .confirm-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--accent);
+    }
+
+    .confirm-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .confirm-subtext {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    /* — Case meta — */
+    .case-meta {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-bottom: 32px;
+    }
+
+    .case-meta-item {
+      text-align: center;
+    }
+
+    .case-meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .case-meta-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .case-meta-value.status-badge {
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+      padding: 3px 14px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 20px;
+    }
+
+    /* — What happens next — */
+    .next-steps {
+      text-align: left;
+      max-width: 420px;
+      margin: 0 auto 32px;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .next-steps-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .next-steps ol {
+      padding-left: 20px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .next-steps ol li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .next-steps ol li::marker {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .next-steps-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* — Confirmation actions — */
+    .confirm-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-done {
+      padding: 13px 48px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+
+    .btn-done:hover { background: #256e35; }
+
+    .btn-link {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .btn-link:hover { color: #256e35; }
+
+    /* ===========================
+       FOOTER
+       =========================== */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: var(--background);
+    }
+
+    /* ===========================
+       LOADING SPINNER (brief transition)
+       =========================== */
+    .spinner {
+      display: none;
+      margin: 32px auto;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===========================
+       VISIBILITY HELPERS
+       =========================== */
+    .hidden { display: none !important; }
+
+    /* ===========================
+       RESPONSIVE
+       =========================== */
+    @media (max-width: 640px) {
+      .main {
+        padding: 32px 16px 64px;
+      }
+
+      .page-heading {
+        font-size: 26px;
+      }
+
+      .form-card {
+        padding: 20px;
+      }
+
+      #student-input {
+        min-height: 150px;
+        font-size: 14px;
+      }
+
+      .case-meta {
+        gap: 24px;
+      }
+
+      .next-steps {
+        padding: 16px;
+      }
+
+      .header-portal-label {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="header" role="banner">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="header-brand-name">OneRoute</span>
+        <span class="header-brand-sub">Student Support</span>
+      </div>
+      <div class="header-right">
+        <div class="header-user-info" id="header-user-info">
+          <span class="header-portal-label" id="header-user-name">Student Portal</span>
+          <span class="header-user-id" id="header-user-id" style="display:none;"></span>
+        </div>
+        <div class="header-avatar" id="header-avatar" aria-label="Student profile placeholder">S</div>
+        <a href="signup.html" id="auth-link" class="header-auth-link">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main" id="main-content">
+
+    <!-- ——— FORM VIEW ——— -->
+    <section id="form-view">
+      <p class="eyebrow">Student Support</p>
+      <h1 class="page-heading">Tell us what's going on.</h1>
+      <p class="page-subtext">
+        <strong>One place to start. The right support.</strong><br />
+        You don't need to know which department can help. Describe your situation in your own words and our triage system will help route it.
+      </p>
+
+      <div class="form-card">
+        <div class="textarea-wrap">
+          <label for="student-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">
+            Describe your situation
+          </label>
+          <textarea
+            id="student-input"
+            maxlength="1000"
+            placeholder="Tell us what you're experiencing...&#10;&#10;For example: I've been struggling to keep up with classes and my attendance is falling. I don't know who I should talk to."
+            aria-describedby="privacy-note"
+          ></textarea>
+        </div>
+
+        <div class="char-counter" id="char-counter">0 / 1000</div>
+
+        <p class="privacy-note" id="privacy-note">
+          Only share information you're comfortable providing.<br />
+          Your request will be reviewed by the appropriate support team.
+        </p>
+
+        <button
+          class="btn-primary"
+          id="submit-btn"
+          type="button"
+          disabled
+          aria-label="Submit your support request"
+        >
+          Get Support
+        </button>
+
+        <!-- Quick Start -->
+        <div class="quick-start">
+          <p class="quick-start-label">Not sure how to start?</p>
+          <div class="chips" id="chips">
+            <button class="chip" type="button" data-example="academic">Academic pressure</button>
+            <button class="chip" type="button" data-example="overwhelmed">Feeling overwhelmed</button>
+            <button class="chip" type="button" data-example="attendance">Attendance problems</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ——— LOADING SPINNER (brief visual feedback) ——— -->
+    <div class="spinner hidden" id="spinner"></div>
+
+    <!-- ——— CONFIRMATION VIEW ——— -->
+    <section id="confirmation-view" class="hidden">
+      <div class="form-card">
+        <div class="confirmation">
+
+          <div class="confirm-icon">
+            <!-- Simple checkmark SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+
+          <h2 class="confirm-heading">Your request has been received.</h2>
+          <p class="confirm-subtext">
+            We'll review what you've shared and connect your request to the appropriate support service.
+          </p>
+
+          <div class="case-meta">
+            <div class="case-meta-item">
+              <div class="case-meta-label">Case ID</div>
+              <div class="case-meta-value" id="confirm-case-id">—</div>
+            </div>
+            <div class="case-meta-item">
+              <div class="case-meta-label">Status</div>
+              <div class="case-meta-value status-badge" id="confirm-status">Received</div>
+            </div>
+          </div>
+
+          <!-- Automated Triage Assessment (MVP Presentation Flow) -->
+          <div class="triage-result-card" id="triage-result-card" style="margin: 0 auto 28px; max-width: 440px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; text-align: left;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); margin-bottom: 10px;">Automated Triage & Routing</div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <span style="font-size: 13px; color: var(--muted);">Identified Category:</span>
+              <strong id="confirm-category" style="font-size: 13px; color: var(--primary);">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <span style="font-size: 13px; color: var(--muted);">Assigned Service Team:</span>
+              <strong id="confirm-team" style="font-size: 13px; color: var(--primary);">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+              <span style="font-size: 13px; color: var(--muted);">Routing Priority:</span>
+              <span id="confirm-priority" style="font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: #e8f5ec; color: #2E8540;">—</span>
+            </div>
+            <p id="confirm-reason" style="font-size: 12px; color: var(--muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 10px; margin: 0;"></p>
+          </div>
+
+          <div class="next-steps">
+            <div class="next-steps-title">What happens next?</div>
+            <ol>
+              <li>Your request is reviewed.</li>
+              <li>The appropriate support service is identified.</li>
+              <li>A support team receives your request.</li>
+            </ol>
+            <p class="next-steps-note">You don't need to figure out which department to contact.</p>
+          </div>
+
+          <div class="confirm-actions">
+            <button class="btn-done" id="done-btn" type="button">Done</button>
+            <button class="btn-link" id="another-btn" type="button">Submit another request</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    &copy; 2026 OneRoute &middot; Student Wellbeing Prototype
+  </footer>
+
+  <!-- =========================================================
+       JAVASCRIPT
+       =========================================================
+       Integration guide for teammates:
+       ————————————————————————————————
+       1. getStudentInput()        — returns raw textarea value
+       2. processStudentRequest()  — builds the case data object
+       3. createCase()             — persistence layer (replace with API)
+       4. showConfirmation()       — renders the confirmation screen
+       5. resetForm()              — returns to input screen
+
+       To integrate with a real backend or ServiceNow:
+         • Replace createCase() with your API call.
+         • Replace processStudentRequest() with AI triage logic.
+         • The rest of the UI does not need to change.
+       ========================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =============================================
+      //  AUTH & SESSION STATE (from signup.html)
+      // =============================================
+      let currentUser = null;
+      try {
+        const storedUser = localStorage.getItem('supportAIUser');
+        if (storedUser) {
+          currentUser = JSON.parse(storedUser);
+        }
+      } catch (e) {
+        console.warn('[OneRoute] Could not parse stored session:', e);
+      }
+
+      // Sync UI with current logged-in user
+      const userNameEl = document.getElementById('header-user-name');
+      const userIdEl   = document.getElementById('header-user-id');
+      const avatarEl   = document.getElementById('header-avatar');
+      const authLink   = document.getElementById('auth-link');
+
+      if (currentUser && currentUser.name) {
+        if (userNameEl) userNameEl.textContent = currentUser.name;
+        if (userIdEl) {
+          userIdEl.textContent = currentUser.userId || '';
+          userIdEl.style.display = 'block';
+        }
+        if (avatarEl && currentUser.name.trim().length > 0) {
+          avatarEl.textContent = currentUser.name.trim().charAt(0).toUpperCase();
+        }
+        if (authLink) {
+          authLink.textContent = 'Sign Out';
+          authLink.href = '#';
+          authLink.title = 'Sign out of this session';
+          authLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.removeItem('supportAIUser');
+            window.location.href = 'login.html';
+          });
+        }
+      } else {
+        if (authLink) {
+          authLink.textContent = 'Sign In';
+          authLink.href = 'login.html';
+        }
+      }
+
+      // =============================================
+      //  DOM REFERENCES
+      // =============================================
+      const textarea     = document.getElementById('student-input');
+      const charCounter  = document.getElementById('char-counter');
+      const submitBtn    = document.getElementById('submit-btn');
+      const formView     = document.getElementById('form-view');
+      const confirmView  = document.getElementById('confirmation-view');
+      const spinner      = document.getElementById('spinner');
+      const doneBtn      = document.getElementById('done-btn');
+      const anotherBtn   = document.getElementById('another-btn');
+      const chipsWrap    = document.getElementById('chips');
+
+      // Confirmation fields
+      const confirmCaseId = document.getElementById('confirm-case-id');
+      const confirmStatus = document.getElementById('confirm-status');
+
+      // =============================================
+      //  QUICK-START EXAMPLE TEXT (Primary Demo Input)
+      // =============================================
+      const examples = {
+        academic:
+          "I'm really struggling with my coursework this semester. The workload feels unmanageable and I'm falling behind on assignments. I'm not sure if I need academic support or if something else is going on.",
+        overwhelmed:
+          "I've been feeling overwhelmed with my studies lately. I've missed a few classes, my attendance is dropping, and I'm worried about falling behind. I don't know whether I should talk to my professor, an academic advisor, or the counselling team.",
+        attendance:
+          "My attendance has dropped significantly this term. I've been missing classes because I find it really hard to get out of bed some mornings. I'm worried it's going to affect my grades but I don't know who to speak to."
+      };
+
+      // =============================================
+      //  LOCAL CASE STORE
+      // =============================================
+      const caseStore = [];
+
+      // =============================================
+      //  1. getStudentInput()
+      //  Returns the raw text from the textarea.
+      // =============================================
+      function getStudentInput() {
+        return textarea.value.trim();
+      }
+
+      // =============================================
+      //  2. processStudentRequest(rawInput)
+      //
+      //  Builds a structured case object using the
+      //  NLP Triage Engine (triageService.js).
+      // =============================================
+      async function processStudentRequest(rawInput) {
+        let triage = null;
+
+        // Attempt API triage if server is running
+        try {
+          const res = await fetch('/api/triage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: rawInput })
+          });
+          if (res.ok) {
+            triage = await res.json();
+          }
+        } catch (e) {
+          // Server offline or file opened directly — fallback to client-side triageService
+        }
+
+        // Reliable fallback to client-side NLP triage engine
+        if (!triage && typeof window.analyzeStudentNeeds === 'function') {
+          try {
+            triage = await window.analyzeStudentNeeds(rawInput);
+          } catch (err) {
+            console.warn('[OneRoute] Local triage warning:', err);
+          }
+        }
+
+        const caseId = 'STU-' + String(Math.floor(10000 + Math.random() * 90000));
+        const studentId = (currentUser && currentUser.userId) ? currentUser.userId : '2310482';
+        const studentName = (currentUser && currentUser.name) ? currentUser.name : 'Current Student';
+
+        const category = triage ? triage.primary_need : 'General Support';
+        const priority = triage ? triage.urgency : 'Medium';
+        const assignmentGroup = triage ? triage.recommended_team : 'Student Wellbeing Team';
+        const reason = triage ? triage.reason : 'Your request has been routed to the appropriate university support service.';
+        const secondary = (triage && triage.secondary_needs) ? triage.secondary_needs : [];
+        const score = triage ? triage.priority_score : 50;
+
+        // Map categories to available service IDs for Staff Console
+        const allNeeds = [category, ...secondary].map(n => n.toLowerCase());
+        const serviceIds = [];
+        if (allNeeds.some(n => n.includes('wellbeing') || n.includes('mental'))) serviceIds.push('counselling');
+        if (allNeeds.some(n => n.includes('academic') || n.includes('study'))) serviceIds.push('academic-support');
+        if (allNeeds.some(n => n.includes('financial') || n.includes('fee') || n.includes('money'))) serviceIds.push('financial-aid');
+        if (allNeeds.some(n => n.includes('accommodation') || n.includes('housing'))) serviceIds.push('accommodation');
+        if (allNeeds.some(n => n.includes('health') || n.includes('physical'))) serviceIds.push('disability');
+        if (serviceIds.length === 0) serviceIds.push('counselling');
+
+        const needString = secondary.length > 0 ? `${category} + ${secondary.join(' + ')}` : category;
+
+        const analysis = {
+          score: score,
+          factors: [
+            [category + ' indication', priority, `Student expressed circumstances requiring ${category.toLowerCase()}.`],
+            ...(secondary.map(s => [s + ' factor', 'Medium', `Keywords detected indicating secondary concern for ${s.toLowerCase()}.`])),
+            ['Urgency indicators', priority, priority === 'High' ? 'Prompt review recommended based on severity.' : 'Standard operational triage timeline.']
+          ],
+          explanation: reason
+        };
+
+        return {
+          id: caseId,
+          caseId: caseId,
+          studentId: studentId,
+          studentName: studentName,
+          rawInput: rawInput,
+          request: rawInput,
+          need: needString,
+          category: category,
+          secondaryNeeds: secondary,
+          priority: priority,
+          assignmentGroup: assignmentGroup,
+          serviceIds: serviceIds,
+          status: 'New',
+          aiSummary: reason,
+          triageSummary: reason,
+          confidence: Math.min(98, 86 + (secondary.length * 4)),
+          score: score,
+          channel: 'Web form',
+          createdAt: new Date().toISOString(),
+          analysis: analysis
+        };
+      }
+
+      // =============================================
+      //  3. createCase(requestData)
+      //  Persists the case object locally and to server.
+      // =============================================
+      async function createCase(requestData) {
+        caseStore.push(requestData);
+
+        // Store into localStorage for admin.html
+        try {
+          const stored = JSON.parse(localStorage.getItem('oneRoute_cases') || '[]');
+          stored.unshift(requestData);
+          localStorage.setItem('oneRoute_cases', JSON.stringify(stored));
+
+          const storedAnalyses = JSON.parse(localStorage.getItem('oneRoute_analyses') || '{}');
+          if (requestData.analysis) {
+            storedAnalyses[requestData.id] = requestData.analysis;
+          }
+          localStorage.setItem('oneRoute_analyses', JSON.stringify(storedAnalyses));
+
+          // Backward compatibility sync
+          localStorage.setItem('supportAICases', JSON.stringify(stored));
+        } catch (e) {
+          console.warn('[OneRoute] LocalStorage sync warning:', e);
+        }
+
+        // Try persisting to server if active
+        try {
+          await fetch('/api/cases', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData)
+          });
+        } catch (e) {}
+
+        console.log('[OneRoute] Case created:', requestData);
+        return requestData;
+      }
+
+      // =============================================
+      //  4. showConfirmation(caseData)
+      //  Renders confirmation view with triage result.
+      // =============================================
+      function showConfirmation(caseData) {
+        confirmCaseId.textContent = caseData.caseId || caseData.id;
+        confirmStatus.textContent = caseData.status || 'Received';
+
+        const categoryEl = document.getElementById('confirm-category');
+        const teamEl = document.getElementById('confirm-team');
+        const priorityEl = document.getElementById('confirm-priority');
+        const reasonEl = document.getElementById('confirm-reason');
+
+        if (categoryEl) categoryEl.textContent = caseData.category || caseData.need || 'General Support';
+        if (teamEl) teamEl.textContent = caseData.assignmentGroup || 'Student Wellbeing Team';
+        if (priorityEl) {
+          priorityEl.textContent = caseData.priority || 'Medium';
+          if (caseData.priority === 'High' || caseData.priority === 'Critical') {
+            priorityEl.style.background = '#fde8e8';
+            priorityEl.style.color = '#9b1c1c';
+          } else if (caseData.priority === 'Medium') {
+            priorityEl.style.background = '#fef08a';
+            priorityEl.style.color = '#854d0e';
+          } else {
+            priorityEl.style.background = '#e8f5ec';
+            priorityEl.style.color = '#2E8540';
+          }
+        }
+        if (reasonEl) reasonEl.textContent = caseData.aiSummary || caseData.triageSummary || 'Your request has been routed to the appropriate university team.';
+
+        formView.classList.add('hidden');
+        spinner.classList.add('hidden');
+        confirmView.classList.remove('hidden');
+
+        // Scroll to top so the confirmation is visible
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // =============================================
+      //  5. resetForm()
+      //  Returns the UI to the initial input state.
+      // =============================================
+      function resetForm() {
+        textarea.value = '';
+        charCounter.textContent = '0 / 1000';
+        charCounter.classList.remove('near-limit');
+        submitBtn.disabled = true;
+
+        confirmView.classList.add('hidden');
+        formView.classList.remove('hidden');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        textarea.focus();
+      }
+
+      // =============================================
+      //  EVENT HANDLERS
+      // =============================================
+
+      // --- Textarea: character counter & button state ---
+      textarea.addEventListener('input', function () {
+        const len = textarea.value.length;
+        charCounter.textContent = len + ' / 1000';
+        charCounter.classList.toggle('near-limit', len > 900);
+        submitBtn.disabled = textarea.value.trim().length === 0;
+      });
+
+      // --- Quick-start chips ---
+      chipsWrap.addEventListener('click', function (e) {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+
+        const key = chip.getAttribute('data-example');
+        if (examples[key]) {
+          textarea.value = examples[key];
+          textarea.dispatchEvent(new Event('input'));
+          textarea.focus();
+        }
+      });
+
+      // --- Submit ---
+      submitBtn.addEventListener('click', async function () {
+        const rawInput = getStudentInput();
+        if (!rawInput) return;
+
+        // Brief loading state for perceived responsiveness
+        formView.classList.add('hidden');
+        spinner.classList.remove('hidden');
+
+        setTimeout(async function () {
+          try {
+            const requestData = await processStudentRequest(rawInput);
+            const savedCase   = await createCase(requestData);
+            showConfirmation(savedCase);
+          } catch (err) {
+            console.error('[OneRoute] Submission error:', err);
+            // Fallback display
+            showConfirmation({
+              caseId: 'STU-10483',
+              status: 'Received',
+              category: 'General Support',
+              assignmentGroup: 'Student Wellbeing Team',
+              priority: 'Medium',
+              aiSummary: 'Your request has been received and routed to our support team.'
+            });
+          }
+        }, 500);
+      });
+
+      // --- Done / Submit another ---
+      doneBtn.addEventListener('click', function () {
+        // For the prototype, reset form
+        resetForm();
+      });
+
+      anotherBtn.addEventListener('click', function () {
+        resetForm();
+      });
+
+      // =============================================
+      //  Expose functions globally for integration
+      // =============================================
+      window.OneRoute = {
+        currentUser:           currentUser,
+        getStudentInput:       getStudentInput,
+        processStudentRequest: processStudentRequest,
+        createCase:            createCase,
+        showConfirmation:      showConfirmation,
+        resetForm:             resetForm,
+        getCaseStore:          function () { return caseStore; }
+      };
+
+    })();
+  </script>
+
+</body>
+</html>

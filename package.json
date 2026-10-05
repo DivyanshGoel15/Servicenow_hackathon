@@ -1,0 +1,12 @@
+{
+  "name": "oneroute",
+  "version": "1.0.0",
+  "description": "OneRoute — Student Wellbeing Triage & Routing System (ServiceNow Hackathon MVP)",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "keywords": ["student-wellbeing", "triage", "routing", "servicenow"],
+  "author": "",
+  "license": "ISC"
+}
